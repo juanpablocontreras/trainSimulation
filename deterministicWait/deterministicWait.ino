@@ -2,6 +2,7 @@
 //Implementation of the station deterministic feature
 
 #include <stdio.h>
+#include <time.h>
 
 #define right_wheel_negative 6
 #define right_wheel_positive 5
@@ -10,9 +11,18 @@
 #define right_IF 7
 #define left_IF 8
 
+//defines used for simulation (remove for real project)
+#define LOWER 0
+#define UPPER 10
+#define TRESHOLD 8
+#define DIVIDER 2
 
+//functions
 void stationWait(int secs);
 int getRandomInt();
+
+//variables
+int waitTime = 0;
 
 void setup() {
   
@@ -34,8 +44,7 @@ void setup() {
 
 
   //initialize random to simulate station detected 
-  
-  
+  srand(time(0));
 }
 
 void loop() {
@@ -63,13 +72,34 @@ void loop() {
     analogWrite(left_wheel_positive,64);
   }
 
+  //check for a station and wait
+  //if random number is above threshold, simulate station wait
+  waitTime = getRandomInt(LOWER,UPPER);
+  if(waitTime > TRESHOLD){
+    //simulate station
+    stationWait(waitTime / DIVIDER);
+  }
+
   delay(50);
 }
 
 void stationWait(int secs){
   //stop the wheels and wait for secs number of seconds
-  //restart car and continue following line 
+  //return from function to loop to restart car and continue following line
+  //function does not restart the car
+
+  //stop car
+  digitalWrite(left_wheel_negative, LOW);//left wheel black wire
+  digitalWrite(right_wheel_negative, LOW);//right wheel black wire
+  digitalWrite(left_wheel_positive, LOW);//left wheel black wire
+  digitalWrite(right_wheel_positive, LOW);//right wheel black wire
+
+  //wait
+  delay(secs*1000);
+  
+  return;
 }
 
-int getRandomInt(){
+int getRandomInt(int lower, int upper){
+  return (rand() % (upper - lower +1)) + lower;
 }
