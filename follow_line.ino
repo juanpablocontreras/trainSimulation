@@ -6,6 +6,11 @@
 #define left_wheel_positive 10
 #define right_IF 7
 #define left_IF 8
+#define left_sensor_trig 11
+#define left_sensor_echo 12
+
+long left_sensor_duration;  //microseconds
+int left_sensor_dist; //cm
 
 void setup() {
   
@@ -24,6 +29,13 @@ void setup() {
   //set up initial wheel speed to zero
   digitalWrite(left_wheel_negative, LOW);//left wheel black wire
   digitalWrite(right_wheel_negative, LOW);//right wheel black wire
+
+  // Left Sensor
+  pinMode(left_sensor_trig, OUTPUT);
+  pinMode(left_sensor_echo, INPUT);
+
+  Serial.begin(9600);
+
 }
 
 void loop() {
@@ -48,6 +60,23 @@ void loop() {
     //make left wheel go at lower speed
     analogWrite(left_wheel_positive,64);
   }
+
+  // Clear trig pin
+  digitalWrite(left_sensor_trig, LOW);
+  delayMicroseconds(2);
+
+  //Set trig pin high for 10 microseconds
+  digitalWrite(left_sensor_trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(left_sensor_trig, LOW);
+
+  //Read echo
+  left_sensor_duration = pulseIn(left_sensor_echo, HIGH);
+
+  //Calculate distance
+  left_sensor_dist = left_sensor_duration * 0.034/2 //Speed of sound = 0.034cm/microsecond & wave travels there and back
   
+  Serial.println(left_sensor_dist);
+
   delay(50);
 }
