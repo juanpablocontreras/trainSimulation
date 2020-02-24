@@ -21,7 +21,7 @@ void setup() {
   pinMode(left_IF, INPUT);//left sensor
   pinMode(right_IF, INPUT);//right sensor
 
-  //set up initial wheel speed
+  //set up initial wheel speed to zero
   digitalWrite(left_wheel_negative, LOW);//left wheel black wire
   digitalWrite(right_wheel_negative, LOW);//right wheel black wire
 }
@@ -48,6 +48,6 @@ void loop() {
     //make left wheel go at lower speed
     analogWrite(left_wheel_positive,64);
   }
-
-  delay(200);
+  
+  delay(50);
 }
